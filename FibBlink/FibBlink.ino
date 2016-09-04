@@ -3,7 +3,7 @@ long long num = 1;
 long long temp = 0;
 
 void setup() {
-  pinMode(RED_LED, OUTPUT);     
+  pinMode(RED_LED, OUTPUT);
 }
 
 void loop() {
