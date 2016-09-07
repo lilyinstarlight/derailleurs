@@ -123,11 +123,12 @@
 #_______________________________________________________________________________
 #
 
+ENERGIABOARD := MSP-EXP430FR5969LP
 ENERGIASBOOK := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # default arduino software directory, check software exists
 ifndef ENERGIADIR
-ENERGIADIR := $(firstword $(wildcard ~/energia /usr/share/energia))
+ENERGIADIR := $(firstword $(wildcard /opt/energia /opt/energia-bin /usr/share/energia))
 endif
 ifeq "$(wildcard $(ENERGIADIR)/hardware/energia/msp430/boards.txt)" ""
 $(error ENERGIADIR is not set correctly; energia software not found)
