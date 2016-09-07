@@ -123,6 +123,8 @@
 #_______________________________________________________________________________
 #
 
+ENERGIASBOOK := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+
 # default arduino software directory, check software exists
 ifndef ENERGIADIR
 ENERGIADIR := $(firstword $(wildcard ~/energia /usr/share/energia))
