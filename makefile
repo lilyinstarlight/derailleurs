@@ -74,8 +74,10 @@
 # ENERGIADIR   The path where the Arduino software is installed on your system.
 #
 #
-# ENERGIABOARD        Specify a target board type.  Run `make boards` to see available
+# ENERGIABOARD Specify a target board type.  Run `make boards` to see available
 #              board types.
+#
+# ENERGIASBOOK The path to the Energia sketchbook.
 #
 # LIBRARIES    A list of Energia libraries to build and include.  This is set
 #              automatically if a .ino (or .pde) is found.
@@ -129,6 +131,11 @@ ifeq "$(wildcard $(ENERGIADIR)/hardware/energia/msp430/boards.txt)" ""
 $(error ENERGIADIR is not set correctly; energia software not found)
 endif
 
+# sketchbook location
+ifndef ENERGIASBOOK
+ENERGIASBOOK := $(HOME)/Energia
+endif
+
 # default arduino version
 ARDUINOCONST ?= 10610
 ENERGIACONST ?= 18
@@ -149,7 +156,7 @@ SOURCES := $(INOFILE) \
 	$(wildcard $(addprefix utility/, *.c *.cc *.cpp))
 
 # automatically determine included libraries
-LIBRARIES := $(filter $(notdir $(wildcard $(HOME)/Energia/libraries/*)), \
+LIBRARIES := $(filter $(notdir $(wildcard $(ENERGIASBOOK)/libraries/*)), \
     $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SOURCES)))
 
 # automatically determine included libraries
@@ -203,7 +210,7 @@ ENERGIACOREDIR := $(ENERGIADIR)/hardware/energia/msp430/cores/msp430
 ENERGIALIB := .lib/arduino.a
 ENERGIALIBLIBSDIR := $(ENERGIADIR)/hardware/energia/msp430/libraries
 ENERGIALIBLIBSPATH := $(foreach lib, $(LIBRARIES), \
-	 $(HOME)/Energia/libraries/$(lib)/ $(HOME)/Energia/libraries/$(lib)/utility/ $(ENERGIADIR)/libraries/$(lib)/ $(ENERGIADIR)/libraries/$(lib)/utility/ $(ENERGIACOREDIR)/libraries/$(lib) $(ENERGIADIR)/hardware/energia/msp430/libraries/$(lib)/ $(ENERGIADIR)/hardware/energia/msp430/libraries/$(lib)/utility/)
+	 $(ENERGIASBOOK)/libraries/$(lib)/ $(ENERGIASBOOK)/libraries/$(lib)/utility/ $(ENERGIADIR)/libraries/$(lib)/ $(ENERGIADIR)/libraries/$(lib)/utility/ $(ENERGIACOREDIR)/libraries/$(lib) $(ENERGIADIR)/hardware/energia/msp430/libraries/$(lib)/ $(ENERGIADIR)/hardware/energia/msp430/libraries/$(lib)/utility/)
 ENERGIALIBOBJS := $(foreach dir, $(ENERGIACOREDIR) $(ENERGIALIBLIBSPATH), \
 	$(patsubst %, .lib/%.o, $(wildcard $(addprefix $(dir)/, *.c *.cpp))))
 
@@ -258,9 +265,9 @@ CPPFLAGS += -mmcu=$(BOARD_BUILD_MCU)
 CPPFLAGS += -DF_CPU=8000000L -DARDUINO=$(ARDUINOCONST)  -DENERGIA=$(ENERGIACONST)
 CPPFLAGS += -I. -Iutil -Iutility -I$(ENERGIACOREDIR)
 CPPFLAGS += -I$(ENERGIADIR)/hardware/energia/msp430/variants/$(BOARD_BUILD_VARIANT)/
-CPPFLAGS += -I$(HOME)/Energia/hardware/energia/msp430/variants/$(BOARD_BUILD_VARIANT)/
-CPPFLAGS += $(addprefix -I$(HOME)/Energia/libraries/,  $(LIBRARIES))
-CPPFLAGS += $(patsubst %, -I$(HOME)/Energia/libraries/%/utility,  $(LIBRARIES))
+CPPFLAGS += -I$(ENERGIASBOOK)/hardware/energia/msp430/variants/$(BOARD_BUILD_VARIANT)/
+CPPFLAGS += $(addprefix -I$(ENERGIASBOOK)/libraries/,  $(LIBRARIES))
+CPPFLAGS += $(patsubst %, -I$(ENERGIASBOOK)/libraries/%/utility,  $(LIBRARIES))
 CPPFLAGS += $(addprefix -I$(ENERGIADIR)/libraries/, $(LIBRARIES))
 CPPFLAGS += $(patsubst %, -I$(ENERGIADIR)/libraries/%/utility, $(LIBRARIES))
 CPPFLAGS += $(addprefix -I$(ENERGIADIR)/hardware/energia/msp430/libraries/, $(LIBRARIES))
