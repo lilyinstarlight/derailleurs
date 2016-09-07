@@ -1,0 +1,3 @@
+[submodule "cc1101"]
+	path = libraries/cc1101
+	url = anonymous@buffet.cs.clemson.edu:jhester/cc1101-energia
