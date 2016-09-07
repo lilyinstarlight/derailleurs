@@ -2,3 +2,6 @@
 .lib/
 *.o
 *.elf
+
+/Energia/
+/libraries/
