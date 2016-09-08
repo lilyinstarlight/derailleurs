@@ -1,37 +1,43 @@
 #include <cc1101.h>
-#include <macros.h>
-#include <pins.h>
-#include <registers.h>
 
-#define sizetx 61
+#define pksize 61
 
-byte TX_buffer[sizetx]={0};
-byte i;
+const char * strbuf = "Test Message";
 
-void setup()
-{
+byte txbuf[pksize] = {0};
+byte txsize;
+
+unsigned long txnum = 0;
+
+unsigned int i;
+
+void setup() {
+  // start computer communication
   Serial.begin(9600);
+
+  // wait for everything to become ready
+  delay(100);
+
+  // initialize radio communication
   Radio.Init();
-  Radio.SetDataRate(4); // Needs to be the same in Tx and Rx
-  Radio.SetLogicalChannel(1); // Needs to be the same as receiver
+  Radio.SetDataRate(4);
+  Radio.SetLogicalChannel(1);
   Radio.SetTxPower(0);
-  for(i=0;i<sizetx;i++)
-  {
-     TX_buffer[i]=0;
-  }
+
+  // put strbuf into txbuf
+  for (i = 0; i < sizeof(strbuf) - 1; i++)
+    txbuf[i] = (byte)strbuf[i];
+  txsize = i;
 }
-unsigned long burstnum=0;
-void loop()
-{
-  // Send 100 packets, then wait 2 seconds
-  // Put burst number in first data field
-  TX_buffer[0] = burstnum++;
-  for(int i=0;i<100;i++) {
-    Radio.SendData(TX_buffer,sizetx);
-    delay(1);
-  }
-  Serial.println("Test");
+
+void loop() {
+  // send payload
+  Radio.SendData(txbuf, txsize);
+
+  // tell computer we transmitted
+  Serial.print("Transmit #");
+  Serial.println(txnum);
+
+  // wait for next transmission
   delay(100);
 }
-
-

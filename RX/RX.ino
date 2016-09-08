@@ -1,35 +1,58 @@
 #include <cc1101.h>
-#include <macros.h>
-#include <pins.h>
-#include <registers.h>
 
-unsigned long lastrx; 
-unsigned long elapsed; 
-void setup()
-{
+#define pksize 61
+
+unsigned long rxlast;
+
+byte rxbuf[pksize] = {0};
+byte rxsize;
+
+char strbuf[pksize + 1] = {'\0'};
+
+unsigned int i;
+
+void setup() {
+  // start computer communication
   Serial.begin(9600);
-  delay(1000);
+
+  // wait for everything to become ready
+  delay(100);
+
+  // initialize radio communication
   Radio.Init();
-  Radio.SetDataRate(4); // Needs to be the same in Tx and Rx
-  Radio.SetLogicalChannel(1); // Needs to be the same as receiver
-	lastrx=millis();
+  Radio.SetDataRate(4);
+  Radio.SetLogicalChannel(1);
+
+  // remember current processor time
+  rxlast = millis();
+
+  // turn on radio
   Radio.RxOn();
 }
 
-byte RX_buffer[61]={0};
-byte sizerx,i,flag;
+void loop() {
+  // if we received radio data
+  if(Radio.CheckReceiveFlag()) {
+    // mark this as the last received time
+    rxlast = millis();
 
-void loop()
-{
-  if(Radio.CheckReceiveFlag())
-  {
-    lastrx = millis();
-    sizerx=Radio.ReceiveData(RX_buffer);
-    // Should be one byte
-    //Serial.write(RX_buffer[0]);
-    Serial.println( RX_buffer[0], DEC);
+    // receive data into buffer
+    rxsize = Radio.ReceiveData(rxbuf);
+
+    // copy buffer as a string
+    for (i = 0; i < rxsize; i++)
+      strbuf[i] = (char)rxbuf[i];
+    strbuf[i] = '\0';
+
+    // print a timestamp header
+    Serial.print("[");
+    Serial.print(rxlast);
+    Serial.print("] ");
+
+    // print whole buffer as a string
+    Serial.println(strbuf);
+
+    // turn radio back on
     Radio.RxOn();
   }
 }
-
-
