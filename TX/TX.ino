@@ -25,7 +25,7 @@ void setup() {
   Radio.SetTxPower(0);
 
   // put strbuf into txbuf
-  for (i = 0; i < sizeof(strbuf) - 1; i++)
+  for (i = 0; i < strbuf[i] != '\0'; i++)
     txbuf[i] = (byte)strbuf[i];
   txsize = i;
 }
@@ -35,8 +35,13 @@ void loop() {
   Radio.SendData(txbuf, txsize);
 
   // tell computer we transmitted
-  Serial.print("Transmit #");
+  Serial.print("Transmit (");
+  Serial.print(strbuf);
+  Serial.print(") #");
   Serial.println(txnum);
+
+  // increment number
+  txnum++;
 
   // wait for next transmission
   delay(100);
