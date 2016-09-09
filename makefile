@@ -281,9 +281,6 @@ CPPDEPFLAGS = -MMD -MP -MF .dep/$<.dep
 CPPINOFLAGS := -x c++ -include $(ENERGIACOREDIR)/Arduino.h
 LINKFLAGS := -mmcu=$(BOARD_BUILD_MCU) -Os -Wl,-gc-sections,-u,main -lm
 
-# figure out which arg to use with stty
-STTYFARG := $(shell stty --help > /dev/null 2>&1 && echo -F || echo -f)
-
 # include dependencies
 ifneq "$(MAKECMDGOALS)" "clean"
 -include $(DEPFILES)
@@ -319,8 +316,10 @@ boards:
 			-e 's/\(.\{14\}\) *\(.*\)/\1 \2/'
 
 monitor:
-	stty raw 9600 -F $(SERIALDEV)
-	cat $(SERIALDEV)
+	stty raw 9600 igncr hupcl -echo -F $(SERIALDEV)
+	@echo Connected. Press Ctrl+D to close the monitor.
+	@sh -c 'trap "kill %1" INT; cat -v $(SERIALDEV) & cat >$(SERIALDEV); kill %1'
+	stty sane -F $(SERIALDEV)
 
 size: $(TARGET).elf
 	echo && $(MSP430SIZE) $(TARGET).elf
