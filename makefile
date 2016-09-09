@@ -299,7 +299,7 @@ all: target
 target: $(TARGET).elf
 
 upload: target
-	@echo "\nUploading to board..."
+	@echo Uploading to board...
 	$(UPLOAD_LD) $(UPLOAD) $(UPLOAD_FLAGS)
 
 
