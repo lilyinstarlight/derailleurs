@@ -22,6 +22,7 @@ void setup() {
   Radio.Init();
   Radio.SetDataRate(4);
   Radio.SetLogicalChannel(1);
+  Radio.SetMaxPacketLength(pksize);
   Radio.SetTxPower(0);
 
   // put strbuf into txbuf
@@ -35,10 +36,10 @@ void loop() {
   Radio.SendData(txbuf, txsize);
 
   // tell computer we transmitted
-  Serial.print("Transmit (");
-  Serial.print(strbuf);
-  Serial.print(") #");
-  Serial.println(txnum);
+  Serial.print("Transmit #");
+  Serial.print(txnum);
+  Serial.println(":");
+  Serial.println(strbuf);
 
   // increment number
   txnum++;

@@ -22,11 +22,12 @@ void setup() {
   Radio.Init();
   Radio.SetDataRate(4);
   Radio.SetLogicalChannel(1);
+  Radio.SetMaxPacketLength(pksize);
 
   // remember current processor time
   rxlast = millis();
 
-  // turn on radio
+  // put radio in receive mode
   Radio.RxOn();
 }
 
@@ -52,7 +53,7 @@ void loop() {
     // print whole buffer as a string
     Serial.println(strbuf);
 
-    // turn radio back on
+    // put radio back in receive mode
     Radio.RxOn();
   }
 }
