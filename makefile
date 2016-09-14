@@ -171,9 +171,9 @@ endif
 ifeq "$(SERIALDEV)" ""
 
 ifeq "$(ENERGIABOARD)" "MSP-EXP430F5529LP"
-	SERIALDEV:= /dev/ttyACM1
+	SERIALDEV := /dev/ttyACM1
 else ifeq "$(ENERGIABOARD)" "MSP-EXP430FR5969LP"
-	SERIALDEV:= /dev/ttyACM1
+	SERIALDEV := /dev/ttyACM1
 else
 	SERIALDEV := $(firstword $(wildcard /dev/ttyACM? /dev/ttyUSB? /dev/tty.usbserial* /dev/tty.usbmodem*))
 endif
