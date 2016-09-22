@@ -2,26 +2,20 @@
 #define MYSERIAL_H
 #include <Arduino.h>
 
-#ifndef RX
-#define RX P1_5
-#endif
-#ifndef TX
-#define TX P1_4
-#endif
+class MySerial {
+	private:
+		int rx, tx;
 
-#ifndef CLOCK_MS
-#define CLOCK_MS 10
-#endif
+		unsigned long clock_ms;
 
-class MySerialImpl {
 	public:
-		void init();
+		MySerial(int rx_pin=7, int tx_pin=8);
+
+		void begin(unsigned long speed=10);
 		bool available();
 		byte parity(byte data);
 		bool check(byte data);
 		byte read();
 		void write(byte data);
 };
-
-extern MySerialImpl MySerial;
 #endif

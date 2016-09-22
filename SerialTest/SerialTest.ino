@@ -2,15 +2,17 @@
 
 unsigned long errors = 0;
 
+MySerial mySerial(P1_4, P1_5);
+
 void setup() {
-	MySerial.init();
+	mySerial.begin();
 	Serial.begin(9600);
 }
 
 void loop() {
-	if (MySerial.available()) {
-		byte data = MySerial.read();
-		if (!MySerial.check(data))
+	if (mySerial.available()) {
+		byte data = mySerial.read();
+		if (!mySerial.check(data))
 			errors++;
 		Serial.print((char)data);
 	}
@@ -27,8 +29,8 @@ void loop() {
 		else {
 			int ch;
 			for (ch = 0; str[ch] != '\0'; ch++)
-				MySerial.write(str[ch]);
-			MySerial.write('\n');
+				mySerial.write(str[ch]);
+			mySerial.write('\n');
 		}
 	}
 }

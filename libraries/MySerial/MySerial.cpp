@@ -1,17 +1,22 @@
 #include "MySerial.h"
 
-void MySerialImpl::init() {
-	pinMode(RX, INPUT_PULLUP);
-	pinMode(TX, OUTPUT);
+MySerial::MySerial(int rx_pin, int tx_pin) : rx(rx_pin), tx(tx_pin) {
+	pinMode(rx, INPUT_PULLUP);
+	pinMode(tx, OUTPUT);
 
-	digitalWrite(TX, HIGH);
+	digitalWrite(tx, HIGH);
 }
 
-bool MySerialImpl::available() {
-	return digitalRead(RX) == LOW;
+
+void MySerial::begin(unsigned long speed) {
+	clock_ms = speed;
 }
 
-byte MySerialImpl::parity(byte data) {
+bool MySerial::available() {
+	return digitalRead(rx) == LOW;
+}
+
+byte MySerial::parity(byte data) {
 	byte bit = 0;
 	byte parity = 0;
 
@@ -21,28 +26,28 @@ byte MySerialImpl::parity(byte data) {
 	return parity;
 }
 
-bool MySerialImpl::check(byte data) {
+bool MySerial::check(byte data) {
 	return parity(data) == (data & (1 << 7));
 }
 
-byte MySerialImpl::read() {
+byte MySerial::read() {
 	byte bit = 0;
 	byte data = 0;
 
-	digitalWrite(TX, LOW);
+	digitalWrite(tx, LOW);
 
 	for (bit = 0; bit < 7; bit++) {
-		delay(CLOCK_MS);
-		digitalWrite(TX, HIGH);
-		delay(CLOCK_MS);
-		data |= (digitalRead(RX) << bit);
-		digitalWrite(TX, LOW);
+		delay(clock_ms);
+		digitalWrite(tx, HIGH);
+		delay(clock_ms);
+		data |= (digitalRead(rx) << bit);
+		digitalWrite(tx, LOW);
 	}
 
 	return data;
 }
 
-void MySerialImpl::write(byte data) {
+void MySerial::write(byte data) {
 	byte bit = 0;
 	byte low = 0;
 
@@ -51,21 +56,19 @@ void MySerialImpl::write(byte data) {
 	else
 		data ^= (1 << 7);
 
-	digitalWrite(TX, LOW);
+	digitalWrite(tx, LOW);
 
 	while (bit < 8) {
-		if (digitalRead(RX) == LOW) {
+		if (digitalRead(rx) == LOW) {
 			low = 1;
 		}
-		else if (low && digitalRead(RX) == HIGH) {
-			digitalWrite(TX, (data & (1 << bit)));
+		else if (low && digitalRead(rx) == HIGH) {
+			digitalWrite(tx, (data & (1 << bit)));
 			bit++;
 
 			low = 0;
 		}
 
-		delay(CLOCK_MS);
+		delay(clock_ms);
 	}
 }
-
-MySerialImpl MySerial;
