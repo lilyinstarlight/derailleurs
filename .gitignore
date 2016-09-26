@@ -2,6 +2,7 @@
 .lib/
 *.o
 *.elf
+*.s#*
 
 Energia/
 libraries/
