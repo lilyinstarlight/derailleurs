@@ -2,14 +2,14 @@
 
 #define pksize 61
 
-const char * strbuf = "Test Message";
-
 byte txbuf[pksize] = {0};
-byte txsize;
+byte txsize = 0;
 
 unsigned long txnum = 0;
 
-unsigned int i;
+int i = 0;
+
+byte transmit = 0;
 
 void setup() {
   // start computer communication
@@ -24,26 +24,44 @@ void setup() {
   Radio.SetLogicalChannel(1);
   Radio.SetMaxPacketLength(pksize);
   Radio.SetTxPower(0);
-
-  // put strbuf into txbuf
-  for (i = 0; i < strbuf[i] != '\0'; i++)
-    txbuf[i] = (byte)strbuf[i];
-  txsize = i;
 }
 
 void loop() {
-  // send payload
-  Radio.SendData(txbuf, txsize);
+  // if character available, parse it
+  if (Serial.available()) {
+    // read serial byte
+    txbuf[i] = (byte)Serial.read();
 
-  // tell computer we transmitted
-  Serial.print("Transmit #");
-  Serial.print(txnum);
-  Serial.println(":");
-  Serial.println(strbuf);
+    // send message if byte is a newline or a full packet
+    if (txbuf[i] == (byte)'\n' || i == pksize)
+      transmit = 1;
+    else
+      i++;
 
-  // increment number
-  txnum++;
+    // increment transmission size
+    txsize++;
+  }
 
-  // wait for next transmission
-  delay(100);
+  // if we need to transmit
+  if (transmit) {
+    // send payload
+    Radio.SendData(txbuf, txsize);
+
+    // tell computer we transmitted
+    Serial.print("Transmit #");
+    Serial.print(txnum);
+    Serial.print(": ");
+    Serial.write(txbuf, txsize);
+
+    // increment number
+    txnum++;
+
+    // wait for next transmission
+    delay(100);
+
+    // reset variables
+    i = 0;
+    txsize = 0;
+    transmit = 0;
+  }
 }
