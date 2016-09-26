@@ -8,4 +8,5 @@ Foster McLane
 Ryan Becwar
 
 === Git Repo ===
-https://buffet.cs.clemson.edu/vcs/u/mbinns/Derailleurs/
+https://buffet.cs.clemson.edu/vcs/u/mbinns/Derailleurs/ (Mirror)
+https://github.com/fkmclane/derailleurs (Live)
