@@ -3,5 +3,5 @@
 *.o
 *.elf
 
-/Energia/
-/libraries/
+Energia/
+libraries/
