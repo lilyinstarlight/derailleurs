@@ -1,14 +1,16 @@
 #define ONE_BUTTON P1_1
 #define ZERO_BUTTON P4_5
 
-const uint16_t code = 0b10100111001;
-const byte size = 11;
+#define MAX_CODE 6
 
-const unsigned int debounce_time = 40; // ms
+const bool code[] = {1, 0, 0, 1};
 
+const unsigned int debounce_time = 200; // ms
+
+const byte code_size = sizeof(code);
 byte code_idx = 0;
 
-enum State { LOCKED, PARTIAL, UNLOCKED };
+enum State {LOCKED, INCORRECT, PARTIAL, UNLOCKED};
 
 State state = LOCKED;
 
@@ -23,6 +25,10 @@ void locked() {
 	code_idx = 0;
 }
 
+void incorrect() {
+	code_idx++;
+}
+
 void partial() {
 	code_idx++;
 }
@@ -30,14 +36,16 @@ void partial() {
 void unlocked() {
 	digitalWrite(RED_LED, LOW);
 	digitalWrite(GREEN_LED, HIGH);
+
+	code_idx = code_size;
 }
 
-StateFunc funcs[] = {locked, partial, unlocked};
+StateFunc funcs[] = {locked, incorrect, partial, unlocked};
 
 void change(State next) {
-	state = next;
-
 	funcs[next]();
+
+	state = next;
 }
 
 unsigned long last_one = 0;
@@ -47,16 +55,22 @@ void enter(int bit) {
 	if (state == UNLOCKED) {
 		change(LOCKED);
 	}
-	else {
-		if (bitRead(code, size - 1 - code_idx) != bit) {
+	else if (state == INCORRECT) {
+		change(INCORRECT);
+
+		if (code_idx == MAX_CODE)
 			change(LOCKED);
+	}
+	else {
+		if (code[code_size - 1 - code_idx] == bit) {
+			change(PARTIAL);
+
+			if (code_idx == code_size) {
+				change(UNLOCKED);
+			}
 		}
 		else {
-			change(PARTIAL);
-		}
-
-		if (code_idx == size) {
-			change(UNLOCKED);
+			change(INCORRECT);
 		}
 	}
 }
@@ -92,5 +106,38 @@ void setup() {
 	change(LOCKED);
 }
 
+bool blink_state = false;
+unsigned long blink_time = 0;
+
+State last_state = LOCKED;
+
 void loop() {
+	if (last_state != state) {
+		if (state == LOCKED) {
+			digitalWrite(RED_LED, LOW);
+			delay(125);
+			digitalWrite(RED_LED, HIGH);
+			delay(125);
+			digitalWrite(RED_LED, LOW);
+			delay(125);
+			digitalWrite(RED_LED, HIGH);
+			delay(125);
+			digitalWrite(RED_LED, LOW);
+			delay(250);
+			digitalWrite(RED_LED, HIGH);
+		}
+
+		last_state = state;
+	}
+
+	unsigned long time = millis();
+
+	if ((state == PARTIAL || state == INCORRECT) && time > blink_time) {
+		digitalWrite(RED_LED, blink_state);
+
+		blink_state = !blink_state;
+		blink_time = time + 1000;
+	}
+
+	sleep(80);
 }
