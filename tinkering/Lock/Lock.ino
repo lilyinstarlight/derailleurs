@@ -8,8 +8,6 @@ const unsigned int debounce_time = 40; // ms
 
 byte code_idx = 0;
 
-bool blink_state = false;
-
 enum State { LOCKED, PARTIAL, UNLOCKED };
 
 State state = LOCKED;
