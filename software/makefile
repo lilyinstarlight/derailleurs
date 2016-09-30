@@ -82,6 +82,8 @@
 # LIBRARIES    A list of Energia libraries to build and include.  This is set
 #              automatically if a .ino (or .pde) is found.
 #
+# SERIALBAUD   The rate of serial transfer. Defaults to 9600.
+#
 # SERIALDEV    The unix device name of the serial device that is the Arduino.
 #              If unspecified, an attempt is made to determine the name of a
 #              connected Arduino's serial device.
@@ -165,6 +167,10 @@ LIBRARIES := $(filter $(notdir $(wildcard $(ENERGIASBOOK)/libraries/*)), \
 # automatically determine included libraries
 LIBRARIES += $(filter $(notdir $(wildcard $(ENERGIADIR)/hardware/energia/msp430/libraries/*)), \
     $(shell sed -ne "s/^ *\# *include *[<\"]\(.*\)\.h[>\"]/\1/p" $(SOURCES)))
+endif
+
+ifeq "$(SERIALBAUD)" ""
+    SERIALBAUD := 9600
 endif
 
 # no serial device? make a poor attempt to detect an arduino
@@ -325,7 +331,7 @@ boards:
 			-e 's/\(.\{14\}\) *\(.*\)/\1 \2/'
 
 monitor:
-	stty raw 9600 igncr hupcl -echo -F $(SERIALDEV)
+	stty raw $(SERIALBAUD) igncr hupcl -echo -F $(SERIALDEV)
 	@echo Connected. Press Ctrl+D to close the monitor.
 	@sh -c 'trap "kill %1" INT; cat -v $(SERIALDEV) & cat >$(SERIALDEV); kill %1'
 	stty sane -F $(SERIALDEV)
