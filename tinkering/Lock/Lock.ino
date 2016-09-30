@@ -71,6 +71,9 @@ void enter(int bit) {
 		}
 		else {
 			change(INCORRECT);
+
+			if (code_idx == MAX_CODE)
+				change(LOCKED);
 		}
 	}
 }
