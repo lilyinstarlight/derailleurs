@@ -5,6 +5,8 @@
 *.s#*
 *.b#*
 *.lck
+*.job
+*.pro
 
 Energia/
 libraries/
