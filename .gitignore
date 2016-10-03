@@ -3,6 +3,8 @@
 *.o
 *.elf
 *.s#*
+*.b#*
+*.lck
 
 Energia/
 libraries/
