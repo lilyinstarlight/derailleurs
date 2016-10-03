@@ -1813,8 +1813,8 @@ Operational amplifiers,  comparators, voltage regulators, ADCs, DACs, etc.&lt;p&
 <pad name="1" x="-2.54" y="-10.16" drill="1.1176" shape="long" rot="R90"/>
 <pad name="2" x="0" y="-10.16" drill="1.1176" shape="long" rot="R90"/>
 <pad name="3" x="2.54" y="-10.16" drill="1.1176" shape="long" rot="R90"/>
-<text x="-5.461" y="-10.922" size="1.778" layer="25" ratio="10" rot="R90">&gt;NAME</text>
-<text x="7.366" y="-11.049" size="1.778" layer="27" ratio="10" rot="R90">&gt;VALUE</text>
+<text x="7.239" y="-10.922" size="1.778" layer="25" ratio="10" rot="R90">&gt;NAME</text>
+<text x="7.366" y="-0.889" size="1.778" layer="27" ratio="10" rot="R90">&gt;VALUE</text>
 <rectangle x1="2.159" y1="-11.049" x2="2.921" y2="-10.414" layer="21"/>
 <rectangle x1="-0.381" y1="-11.049" x2="0.381" y2="-10.414" layer="21"/>
 <rectangle x1="-2.921" y1="-11.049" x2="-2.159" y2="-10.414" layer="21"/>
@@ -2821,9 +2821,9 @@ Foster McLane</text>
 <segment>
 <pinref part="IC1" gate="A1" pin="VI"/>
 <wire x1="17.78" y1="22.86" x2="27.94" y2="22.86" width="0.1524" layer="91"/>
-<pinref part="C1" gate="G$1" pin="-"/>
+<pinref part="C1" gate="G$1" pin="+"/>
 <wire x1="27.94" y1="22.86" x2="33.02" y2="22.86" width="0.1524" layer="91"/>
-<wire x1="27.94" y1="10.16" x2="27.94" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="27.94" y1="17.78" x2="27.94" y2="22.86" width="0.1524" layer="91"/>
 <label x="17.78" y="22.86" size="1.778" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
@@ -2834,9 +2834,9 @@ Foster McLane</text>
 <wire x1="43.18" y1="5.08" x2="27.94" y2="5.08" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="5.08" x2="55.88" y2="5.08" width="0.1524" layer="91"/>
 <label x="60.96" y="5.08" size="1.778" layer="95" xref="yes"/>
-<pinref part="C1" gate="G$1" pin="+"/>
+<pinref part="C1" gate="G$1" pin="-"/>
 <wire x1="55.88" y1="5.08" x2="60.96" y2="5.08" width="0.1524" layer="91"/>
-<wire x1="27.94" y1="17.78" x2="27.94" y2="5.08" width="0.1524" layer="91"/>
+<wire x1="27.94" y1="10.16" x2="27.94" y2="5.08" width="0.1524" layer="91"/>
 <pinref part="C2" gate="G$1" pin="-"/>
 <wire x1="55.88" y1="10.16" x2="55.88" y2="5.08" width="0.1524" layer="91"/>
 <wire x1="27.94" y1="5.08" x2="17.78" y2="5.08" width="0.1524" layer="91"/>
