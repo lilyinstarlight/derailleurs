@@ -145,8 +145,8 @@
 <wire x1="45" y1="70" x2="0" y2="70" width="0" layer="20"/>
 <wire x1="0" y1="70" x2="0" y2="0" width="0" layer="20"/>
 <rectangle x1="2" y1="1" x2="19" y2="26" layer="16"/>
-<text x="2" y="67" size="1.778" layer="48">Decision Board</text>
-<text x="2" y="64" size="1.778" layer="48">Derailleurs</text>
+<text x="2" y="67" size="1.778" layer="112">Decision Board</text>
+<text x="2" y="64" size="1.778" layer="112">Derailleurs</text>
 <rectangle x1="2" y1="28" x2="19" y2="51" layer="16"/>
 </plain>
 <libraries>
