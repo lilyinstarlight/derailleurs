@@ -7,6 +7,7 @@
 *.lck
 *.job
 *.pro
+.DS_Store
 
 Energia/
 libraries/
