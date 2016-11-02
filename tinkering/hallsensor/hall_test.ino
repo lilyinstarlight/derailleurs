@@ -1,26 +1,26 @@
 #define HALLPIN P1_5
 
 int revs;
-int count; 
 unsigned long oldtime;
-unsigned long average;
+unsigned int average;
 int rpm[5];
 int hallRead;
 int switched;
-void magnet_detect();
 
 void setup()
 {
     Serial.begin(9600);
-    //Pull down to start
-    pinMode(HALLPIN,INPUT_PULLDOWN);
+
+    //Pull up to start
+    pinMode(HALLPIN,INPUT_PULLUP);
+    pinMode(P1_4,OUTPUT);
+    digitalWrite(P1_4,HIGH);
 
     //initialize variables
     switched = 0;
     revs = 0;
     oldtime = 0;
     average = 0;
-    count = 0;
 }
 
 void loop()
@@ -49,6 +49,5 @@ void loop()
        revs++;
        switched = 0;
     }
-
 }
 
