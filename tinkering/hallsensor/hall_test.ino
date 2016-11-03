@@ -1,9 +1,11 @@
+#define RPMSIZE 5
 #define HALLPIN P1_5
 
 int revs;
 unsigned long oldtime;
 unsigned int average;
-int rpm[5];
+int rpm[RPMSIZE];
+int rpmidx;
 int hallRead;
 int switched;
 
@@ -21,17 +23,25 @@ void setup()
     revs = 0;
     oldtime = 0;
     average = 0;
+
+    for (rpmidx = RPMSIZE - 1; rpmidx >= 0; rpmidx--)
+        rpm[rpmidx] = 0;
 }
 
 void loop()
 {
     hallRead = digitalRead(HALLPIN);
 
-    //Using moving average to calculate RPM, I don't think it is totally correct
     if(millis() - oldtime > 1000)
     {
-        average -= average / 5;
-        average += (revs*30) / 5;
+        rpm[rpmidx] = revs;
+
+        rpmidx = (rpmidx + 1) % RPMSIZE;
+
+        average = 0;
+        for (int idx = 0; idx < RPMSIZE; idx++)
+            average += rpm[idx];
+        average /= RPMSIZE;
 
         oldtime = millis();
         revs = 0;
