@@ -1,7 +1,7 @@
 /*
 This test ensures that the module can keep count of what gear it is
 on and not go over 7 or under 1. The enable pins should only 
-active for a valid gear change. Simulate gear chnages with the on 
+active for a valid gear change. Simulate gear changes with the on 
 board buttons.
 
 The state of the enable pins, shifting, and gear are printed in the

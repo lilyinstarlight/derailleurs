@@ -1,12 +1,12 @@
-/* this unit test ensures that the motor module properly recives and
+/* 
+This unit test ensures that the motor module properly receives and 
 processes a signal. The signal is simulated by the buttons on the 
 microcontroller. The response should be the motor turning the proper
 amount. 
 
-the serial monitor indicates when a button has been pressed and how
+The serial monitor indicates when a button has been pressed and how
 much the motor moves in response. There will be a short delay that
 indicates the signal to move is being sent to the motor.
-
 */
 
 
