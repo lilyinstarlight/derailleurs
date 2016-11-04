@@ -2,7 +2,7 @@
 Philips PCD8544 Controller and interface code.
 
 Basis of library pulled from: http://playground.arduino.cc/Code/PCD8544
-Mostly unmodified in first commit.
+Mostly unmodified except for pin mappings in first commit.
 */
 
 #define PIN_SCE   P1_5
@@ -143,13 +143,16 @@ void LcdInitialise(void)
   pinMode(PIN_DC, OUTPUT);
   pinMode(PIN_SDIN, OUTPUT);
   pinMode(PIN_SCLK, OUTPUT);
+  pinMode(PIN_BL, OUTPUT);
   digitalWrite(PIN_RESET, LOW);
   digitalWrite(PIN_RESET, HIGH);
+  analogWrite(PIN_BL, 255);
   LcdWrite(LCD_C, 0x21 );  // LCD Extended Commands.
   LcdWrite(LCD_C, 0xB1 );  // Set LCD Vop (Contrast). 
   LcdWrite(LCD_C, 0x04 );  // Set Temp coefficent. //0x04
   LcdWrite(LCD_C, 0x14 );  // LCD bias mode 1:48. //0x13
   LcdWrite(LCD_C, 0x20 );  // LCD Basic Commands
+  LcdContrast(59);
   LcdWrite(LCD_C, 0x0C );  // LCD in normal mode.
 }
 
@@ -169,12 +172,20 @@ void LcdWrite(byte dc, byte data)
   digitalWrite(PIN_SCE, HIGH);
 }
 
+//Should stick to range 40-60.  Background pixels start to dim at 60
+void LcdContrast(byte contrast)
+{
+  LcdWrite(LCD_C, 0x21);//Commands follow
+  LcdWrite(LCD_C, 0x80 | contrast);
+  LcdWrite(LCD_C, 0x20); //back to display mode
+}
+
 void setup(void)
 {
   LcdInitialise();
   LcdClear();
   Serial.println("writing out");
-  LcdString("Hello World!");
+  LcdString("Hello World!!!!!!");
 }
 
 void loop(void)
