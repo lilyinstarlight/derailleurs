@@ -2,8 +2,17 @@
 Philips PCD8544 Controller and interface code.
 
 Basis of library pulled from: http://playground.arduino.cc/Code/PCD8544
-Mostly unmodified except for pin mappings in first commit.
+Mostly unmodified except for pin mappings in first commit, modified since
+
+Currently displays cadence data to lcd screen.
+Pin mapping follows as defined below, with vcc and gnd going directly between the
+dev board and the screen, and a 330 ohm resistor between the backlight pin(P1_2), and the screen.
+Note that the pin labled SCL* on the dev board is used instead of SCLK for the screen SCLK input.
+
+Ryan Becwar
 */
+
+#include <stdlib.h>
 
 #define PIN_SCE   P1_5
 #define PIN_RESET P1_4
@@ -17,6 +26,13 @@ Mostly unmodified except for pin mappings in first commit.
 
 #define LCD_X     84
 #define LCD_Y     48
+
+//Cadence will never go above 200, so 8 bit ints work well
+uint8_t targetCadence = 0;
+uint8_t currentCadence = 0;
+
+volatile int flag = HIGH;
+
 
 static const byte ASCII[][5] =
 {
@@ -180,14 +196,73 @@ void LcdContrast(byte contrast)
   LcdWrite(LCD_C, 0x20); //back to display mode
 }
 
+//Writes out current cadence information by overwriting every pixel in the display.
+void writeCadence(void) {
+
+  String targetString = String("Target:  ");
+  if(targetCadence < 100)
+    targetString += " ";
+  if(targetCadence < 10)
+    targetString += " ";
+  targetString += targetCadence;
+  char tarBuf[targetString.length() + 1];
+  targetString.toCharArray(tarBuf, targetString.length() + 1);
+
+  String currentString = String("Current: ");
+  if(currentCadence < 100)
+    currentString += " ";
+  if(currentCadence < 10)
+    currentString += " ";
+  currentString += currentCadence;
+  char curBuf[currentString.length() + 1];
+  currentString.toCharArray(curBuf, currentString.length() + 1);
+  
+  LcdString(tarBuf);
+  LcdString("____________");
+  LcdString("            ");
+  LcdString(curBuf);
+  LcdString("            ");
+  LcdString("            ");
+
+}
+
+/*Functions to handle buttons to increase or decrease target cadence.*/
+void bUp(){
+  wakeup();
+  flag = HIGH;
+  targetCadence++;
+}
+
+void bDown(){
+  wakeup();
+  flag = HIGH;
+  targetCadence--;
+}
+
+
 void setup(void)
 {
+  //Setup Buttons
+  //Enable internal pullup. 
+  //These will be changed to the button pins when connected to the board, curretnly represents redboard buttons
+  pinMode(PUSH1, INPUT_PULLUP);
+  pinMode(PUSH2, INPUT_PULLUP);
+  
+  attachInterrupt(PUSH1, bUp, FALLING); // Interrupt is fired whenever button is pressed
+  attachInterrupt(PUSH2, bDown, FALLING); // Interrupt is fired whenever button is pressed
+  
   LcdInitialise();
   LcdClear();
-  Serial.println("writing out");
-  LcdString("Hello World!!!!!!");
+  targetCadence = 73;
+  currentCadence = 25;
+  writeCadence();
 }
 
 void loop(void)
 {
+  suspend();
+  if(flag) {
+    writeCadence();
+    flag = LOW;
+  }  
 }
