@@ -103,7 +103,9 @@ void calc_average()
     mag_count = 0;
      
     //TODO remove debug statement
-    Serial.println(average,DEC);
+    Serial.print("Cadence is: ");
+    Serial.print(average,DEC);
+    Serial.print(": ");
 }
 
 void check_cadence()

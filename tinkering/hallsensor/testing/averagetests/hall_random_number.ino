@@ -104,6 +104,7 @@ void calc_average()
 int speed_test(int magnets)
 {
     revs = abs(magnets);
+    return 0;
 }
 
 bool check_average()
