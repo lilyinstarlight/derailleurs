@@ -9,13 +9,14 @@
  * Version: 1.1
 */
 
+//defines
 #define NUMMAG 4
 #define RPMSIZE 5
 #define HALLPIN P1_5
 
+//Global variable declaration
 unsigned long oldtime;
 double average;
-
 int rps[RPMSIZE];
 int rpsidx;
 int mag_count;
@@ -23,10 +24,12 @@ int hallRead;
 int switched;
 int target;
 
+//function prototypes
 void calc_average();
 void shift_up();
 void shift_down();
 void check_cadence();
+void set_target(int);
 
 void setup()
 {
@@ -42,7 +45,7 @@ void setup()
     mag_count = 0;
     oldtime = 0;
     average = 0;
-    target = 0;
+    target = 75;
 
     for (rpsidx = RPMSIZE - 1; rpsidx >= 0; rpsidx--)
         rps[rpsidx] = 0;
@@ -105,10 +108,12 @@ void calc_average()
 
 void check_cadence()
 {
+    //pedaling is getting hard shift down to make it easier
     if((target - average) >= 10)
     {
         shift_down();
     }
+    //pedaling is getting easy shift up to make it easier
     if((average - target) >= 10)
     {
         shift_up();
@@ -125,4 +130,10 @@ void shift_down()
 {
     //TODO send signal to motor board
     Serial.println("SHIFT DOWN");
+}
+
+void set_target(int tar)
+{
+    //TODO recive target information from LCD board
+    target = tar;
 }

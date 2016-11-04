@@ -1,0 +1,14 @@
+=== HALL EFFECT SENSOR TESTING ===
+* hall_random_number:
+    The hall random number test file tests a range of inputs that can be given from the hall effect sensor to ensure that it is calculating RPM correctly. The test is automatic and has a verify function that ensures the math is being done correctly based on the input given.
+
+    We are calculating RPM based on the average number of magnets seen per second. This number is multiplied by 60 (to get a minute) then divided by 4 (number of magnets we have recording data) to get an RPM count for the rider
+
+    This is important because it will control the motor telling it to shift either up or down
+
+* hall_decision_test:
+    The decision test file is leveraging the random number generator from the last test to give the shift up and down commands. These commands are given if the cadence falls under a threshold (currently defined as 10 for proof of concept)
+
+    This is important because without this logic the motor will never know when to shift the gear. This function will need to know the current gear of the bike and if the motor is currently shifting, so as not to send another shift command and allow the average to settle.
+
+
