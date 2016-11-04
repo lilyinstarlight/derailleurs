@@ -12,3 +12,30 @@
     This is important because without this logic the motor will never know when to shift the gear. This function will need to know the current gear of the bike and if the motor is currently shifting, so as not to send another shift command and allow the average to settle.
 
 
+=== MOTOR LOGIC TESTING ===
+
+motor_unit_test_1:
+
+This unit test ensures that the motor module properly receives and processes a signal. The signal is simulated by the buttons on the microcontroller. The response should be the motor turning the proper amount. 
+
+The serial monitor indicates when a button has been pressed and how much the motor moves in response. There will be a short delay that indicates the signal to move is being sent to the motor.
+
+This test is important because it ensures that the motor has the appropriate response to the gear changing signal it will receive. It also serves as a check for the motor settings. The delay time is appropriate for the set rotation speed and number of steps for shifting. 
+
+
+motor_unit_test_2:
+
+This test ensures that the module can keep count of what gear it is on and not go over 7 or under 1. The enable pins should only active for a valid gear change. Simulate gear changes with the on board buttons.
+
+The state of the enable pins, shifting, and gear are printed in the serial monitor.
+
+This test is needed because it can be dangerous if the controller tries to shift outside of the gear range. It can completely derail the chain or cause the turnbuckle screw to come lose, dropping the cable. It also shows that the motor is only enabled when shifting, preventing unwanted power draw. 
+
+
+motor_unit_test_3:
+
+This is an integrated test to automate the shifting. It is similar to unit test 2, but instead of being activated by manually pushing a button, it receives signals to shift from the sensor module. 
+
+The button inputs are replaced by two spare input pins that connect to the other microcontroller running hall_decision_test.
+
+This test is important because it shows the integration of two modules that will be communicating on the final system. 
