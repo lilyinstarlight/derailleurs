@@ -13,13 +13,16 @@
 #define RPMSIZE 5
 #define HALLPIN P1_5
 
-int revs;
 unsigned long oldtime;
-unsigned int average;
+unsigned long average;
+
 int rpm[RPMSIZE];
 int rpmidx;
+int revs;
 int hallRead;
 int switched;
+
+void calc_average();
 
 void setup()
 {
@@ -47,23 +50,7 @@ void loop()
     // only reads once a second
     if(millis() - oldtime > 1000)
     {
-        rpm[rpmidx] = revs;
-
-        // increase the index until you reace 5 then reset to zero
-        rpmidx = (rpmidx + 1) % RPMSIZE;
-
-        //calculate the new moving average
-        average = 0;
-        for (int idx = 0; idx < RPMSIZE; idx++)
-            average += rpm[idx];
-        
-        average /= RPMSIZE;
-
-        oldtime = millis();
-        revs = 0;
-        
-        //TODO remove debug statement
-        Serial.println(average,DEC);
+        calc_average();
     }
 
     // check what state the hall pin is in
@@ -81,3 +68,25 @@ void loop()
     }
 }
 
+void calc_average()
+{
+    rpm[rpmidx] = revs;
+
+    // increase the index until you reach 5 then reset to zero
+    rpmidx = (rpmidx + 1) % RPMSIZE;
+
+    //calculate the new moving average
+    average = 0;
+    for (int idx = 0; idx < RPMSIZE; idx++)
+        average += rpm[idx];
+    
+    average /= RPMSIZE;
+
+    average *= 60;
+    average /= 4;
+    oldtime = millis();
+    revs = 0;
+     
+    //TODO remove debug statement
+    Serial.println(average,DEC);
+}
