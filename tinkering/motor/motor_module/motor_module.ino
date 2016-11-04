@@ -1,11 +1,6 @@
 /*
-This test ensures that the module can keep count of what gear it is
-on and not go over 7 or under 1. The enable pins should only 
-active for a valid gear change. Simulate gear changes with the on 
-board buttons.
-
-The state of the enable pins, shifting, and gear are printed in the
-serial monitor.
+Current motor module code. Operated by button instead of radio 
+signal. 
 */
 
 
@@ -74,8 +69,6 @@ void loop() {
       disable();
       gear ++;
     }
-    Serial.print("Gear: ");
-    Serial.println(gear);
   }
   
   if (down == 0) {
@@ -85,8 +78,6 @@ void loop() {
       disable();
       gear --;
     }
-    Serial.print("Gear: ");
-    Serial.println(gear);
   }
   
 }
@@ -95,25 +86,19 @@ void loop() {
 // supporting functions
 
 void enable() {
-  Serial.println("Enabled");
   digitalWrite(enable_1, HIGH);
   digitalWrite(enable_2, HIGH);
 }
 
 void disable() {
-  Serial.println("Disabled");
   digitalWrite(enable_1, LOW);
   digitalWrite(enable_2, LOW);
 }
 
 void shift_up() {
   myStepper.step(shift);
-  Serial.print("Shifted ");
-  Serial.println(shift);
 }
 
 void shift_down() {
   myStepper.step(-shift);
-  Serial.print("Shifted ");
-  Serial.println(-shift);
 }
