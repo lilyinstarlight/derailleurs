@@ -4,8 +4,10 @@
  * Hall Effect Sensor Module testing framework
  *
  * This code is used for a Latching hall effect sensor to calculate
- * The RPM of a bike being pedaled and to test the correctness of 
- * output through random number generation and a verification function
+ * The RPM of a bike being pedaled and to test the logic of decision
+ * making, if the current cadence is 10 beyond target it will shift 
+ * in an attempt to match the cadence back up you can see this code
+ * does not shift +-10 of 75
  *
  * Version: 1.1
 */
@@ -28,9 +30,9 @@ void calc_average();
 int speed_test(int magnets);
 
 //Sends shifting commands
-void shiftup();
-void shiftdown();
-void checkcadence();
+void shift_up();
+void shift_down();
+void check_cadence();
 
 void setup()
 {
@@ -64,7 +66,7 @@ void loop()
     {
         speed_test((rand() % 10)+1);
         calc_average();
-        check_cadence()
+        check_cadence();
     }
 }
 
@@ -103,26 +105,27 @@ void calc_average()
 int speed_test(int magnets)
 {
     revs = abs(magnets);
+    return 0;
 }
 
 void check_cadence()
 {
-    if((target - average)<10)
+    if((target - average) >= 10)
     {
-        shiftdown();
+        shift_down();
     }
-    if((target - average)>10)
+    if((average - target) >= 10)
     {
-        shiftup();
+        shift_up();
     }
 }
 
-void shiftup()
+void shift_up()
 {
     Serial.println("SHIFT UP");
 }
 
-void shiftdown()
+void shift_down()
 {
-    Serial.println("SHIFT DOWN);
+    Serial.println("SHIFT DOWN");
 }
