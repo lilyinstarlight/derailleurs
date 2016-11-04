@@ -9,16 +9,16 @@
  * Version: 1.1
 */
 
-
+#define NUMMAG 4
 #define RPMSIZE 5
 #define HALLPIN P1_5
 
 unsigned long oldtime;
-unsigned long average;
+double average;
 
-int rpm[RPMSIZE];
-int rpmidx;
-int revs;
+int rps[RPMSIZE];
+int rpsidx;
+int mag_count;
 int hallRead;
 int switched;
 
@@ -35,12 +35,12 @@ void setup()
 
     //initialize variables
     switched = 0;
-    revs = 0;
+    mag_count = 0;
     oldtime = 0;
     average = 0;
 
-    for (rpmidx = RPMSIZE - 1; rpmidx >= 0; rpmidx--)
-        rpm[rpmidx] = 0;
+    for (rpsidx = RPMSIZE - 1; rpsidx >= 0; rpsidx--)
+        rps[rpsidx] = 0;
 }
 
 void loop()
@@ -57,36 +57,44 @@ void loop()
     // and calculate revolutions
     if(hallRead == 1 && switched == 0)
     {
-       Serial.print("HallPin State: HIGH\n");
-       revs++;
-       switched = 1;
+        //TODO remove debug statement
+        Serial.print("HallPin State: HIGH\n");
+        mag_count++;
+        switched = 1;
     }else if(hallRead == 0 && switched == 1)
     {
-       Serial.print("HallPin State: LOW\n");
-       revs++;
-       switched = 0;
+        //TODO remove debug statement
+        Serial.print("HallPin State: LOW\n");
+        mag_count++;
+        switched = 0;
     }
 }
 
 void calc_average()
 {
-    rpm[rpmidx] = revs;
+    rps[rpsidx] = mag_count;
 
-    // increase the index until you reach 5 then reset to zero
-    rpmidx = (rpmidx + 1) % RPMSIZE;
+    // increase the index until you reace 5 then reset to zero
+    rpsidx = (rpsidx + 1) % RPMSIZE;
 
     //calculate the new moving average
     average = 0;
     for (int idx = 0; idx < RPMSIZE; idx++)
-        average += rpm[idx];
+        average += rps[idx];
     
+    //Calculate RPM from the RPS moving average
     average /= RPMSIZE;
-
     average *= 60;
-    average /= 4;
+    average /= NUMMAG;
+    
+    //Reset oldtime to calculate the next second
     oldtime = millis();
-    revs = 0;
+
+    //Reset mag_count for the next pass
+    mag_count = 0;
      
     //TODO remove debug statement
     Serial.println(average,DEC);
 }
+
+
