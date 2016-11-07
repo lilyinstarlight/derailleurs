@@ -27,14 +27,16 @@ const int stepsPerRevolution = 200;
 Stepper myStepper(stepsPerRevolution, 12,13,5,9);
 
 // set steps per shift
-int shift = 500;
+int shift = 355;
 
 // set variables
 short up;
 short down;
 
-// initalize count
-int gear = 1;
+// initalize gear count
+int gear = 7;
+
+int gear_number = 8;
 
 // function prototypes
 void enable();
@@ -68,7 +70,7 @@ void loop() {
 
   // Turn motor if a button is pressed
   if (up == 0) {
-    if (gear < 7) {
+    if (gear < gear_number) {
       enable();
       shift_up();
       disable();
@@ -107,13 +109,13 @@ void disable() {
 }
 
 void shift_up() {
-  myStepper.step(shift);
-  Serial.print("Shifted ");
-  Serial.println(shift);
-}
-
-void shift_down() {
   myStepper.step(-shift);
   Serial.print("Shifted ");
   Serial.println(-shift);
+}
+
+void shift_down() {
+  myStepper.step(shift);
+  Serial.print("Shifted ");
+  Serial.println(shift);
 }
