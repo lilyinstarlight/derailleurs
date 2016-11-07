@@ -19,7 +19,7 @@ const int stepsPerRevolution = 200;
 Stepper myStepper(stepsPerRevolution, 12,13,5,9);
 
 // set steps per shift
-int shift = 500;
+int shift = 350;
 
 short up;
 short down;
