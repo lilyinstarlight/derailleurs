@@ -53,7 +53,7 @@ void setup() {
   mag_count = 0;
   oldtime = 0;
   average = 0;
-  target = -1;
+  target = 35;
   gear = 1;
 
   for (rpsidx = RPM_AVG - 1; rpsidx >= 0; rpsidx--)
@@ -147,8 +147,8 @@ void calc_average() {
 }
 
 void shift_up() {
-  shift_data.up = true;
-  shift_data.down = false;
+  shift_data.up = false;
+  shift_data.down = true;
   radio_data.header = SWITCHER_HEADER;
   radio_data.shift = shift_data;
 
@@ -159,8 +159,8 @@ void shift_up() {
 }
 
 void shift_down() {
-  shift_data.up = false;
-  shift_data.down = true;
+  shift_data.up = true;
+  shift_data.down = false;
   radio_data.header = SWITCHER_HEADER;
   radio_data.shift = shift_data;
 
