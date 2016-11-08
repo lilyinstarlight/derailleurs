@@ -15,6 +15,7 @@
 #define NUMMAG 4
 #define RPMSIZE 5
 #define HALLPIN P1_5
+#define SHIFT_PIN P4_3
 
 unsigned long oldtime;
 double average;
@@ -41,6 +42,8 @@ void setup()
     //Pull up to start
     pinMode(HALLPIN,INPUT_PULLUP);
     pinMode(P1_4,OUTPUT);
+    pinMode(SHIFT_PIN,OUTPUT);
+    pinMode(HALLPIN,INPUT_PULLDOWN);
     digitalWrite(P1_4,HIGH);
 
     //initialize variables
@@ -123,6 +126,7 @@ void check_cadence()
 void shift_up()
 {
     Serial.println("SHIFT UP");
+    digitalWrite(SHIFT_PIN,HIGH);
 }
 
 void shift_down()
