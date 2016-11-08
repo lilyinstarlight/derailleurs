@@ -24,7 +24,8 @@ int gear;
 radio_t radio_data;
 shift_t shift_data;
 gear_t gear_data;
-cadence_t cadence_data;
+interface_t interface_data;
+target_t target_data;
 
 // function prototypes
 void calc_average();
@@ -55,12 +56,12 @@ void setup() {
   target = -1;
   gear = 1;
 
-  for (rpsidx = RPMSIZE - 1; rpsidx >= 0; rpsidx--)
+  for (rpsidx = RPM_AVG - 1; rpsidx >= 0; rpsidx--)
     rps[rpsidx] = 0;
 }
 
 void loop() {
-  hall_read = digitalRead(HALLPIN);
+  hall_read = digitalRead(HALL);
 
   // only reads once a second
   if(millis() - oldtime > 1000) {
@@ -84,11 +85,11 @@ void loop() {
   }
 
   // check what state the hall sensor is in and calculate revolutions
-  if(hallRead == 1 && switched == 0) {
+  if(hall_read == 1 && switched == 0) {
     mag_count++;
     switched = 1;
   }
-  else if(hallRead == 0 && switched == 1) {
+  else if(hall_read == 0 && switched == 1) {
     mag_count++;
     switched = 0;
   }
