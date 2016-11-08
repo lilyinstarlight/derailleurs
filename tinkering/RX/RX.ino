@@ -16,7 +16,7 @@ void setup() {
   Serial.begin(9600);
 
   // wait for everything to become ready
-  delay(100);
+  delay(1000);
 
   // initialize radio communication
   Radio.Init();
@@ -51,7 +51,7 @@ void loop() {
     Serial.print("] ");
 
     // print whole buffer as a string
-    Serial.println(strbuf);
+    Serial.print(strbuf);
 
     // put radio back in receive mode
     Radio.RxOn();

@@ -16,7 +16,7 @@ void setup() {
   Serial.begin(9600);
 
   // wait for everything to become ready
-  delay(100);
+  delay(1000);
 
   // initialize radio communication
   Radio.Init();
