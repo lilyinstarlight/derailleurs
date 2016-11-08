@@ -179,7 +179,7 @@ void setup(void)
   //These will be changed to the button pins when connected to the board, curretnly represents redboard buttons
   pinMode(PUSH1, INPUT_PULLUP);
   pinMode(PUSH2, INPUT_PULLUP);
-  
+
   attachInterrupt(PUSH1, bUp, FALLING); // Interrupt is fired whenever button is pressed
   attachInterrupt(PUSH2, bDown, FALLING); // Interrupt is fired whenever button is pressed
   
@@ -189,7 +189,7 @@ void setup(void)
   currentCadence = 25;
   writeCadence();
   
-  runTests();
+  //runTests();
 }
 
 void loop(void)
