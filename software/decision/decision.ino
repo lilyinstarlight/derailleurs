@@ -8,6 +8,8 @@
 
 #define SHIFT_OFFSET 10
 
+#define GEAR_COUNT 8
+
 // global variable declarations
 unsigned long oldtime;
 double average;
@@ -97,7 +99,7 @@ void loop() {
 
     if (radio_data.header == SWITCHER_HEADER) {
       gear_data = radio_data.gear;
-      gear = gear_data.gear;
+      gear = GEAR_COUNT - gear_data.gear;
     }
     else if (radio_data.header == INTERFACE_HEADER) {
       target_data = radio_data.target;
