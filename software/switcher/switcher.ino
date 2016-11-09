@@ -29,7 +29,7 @@ bool up;
 bool down;
 
 // initalize gear count
-int gear = 7;
+int gear = 8;
 int gear_number = 8;
 
 // function
