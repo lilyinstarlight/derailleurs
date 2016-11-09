@@ -5,7 +5,6 @@
 #define MAGS 4
 #define RPM_AVG 5
 #define HALL P1_5
-#define QUESTION P1_4
 
 #define SHIFT_OFFSET 10
 
@@ -45,8 +44,6 @@ void setup() {
 
   // pull up to start
   pinMode(HALL, INPUT_PULLUP);
-  pinMode(QUESTION, OUTPUT);
-  digitalWrite(QUESTION, HIGH);
 
   // initialize variables
   switched = 0;
@@ -135,8 +132,8 @@ void calc_average() {
     average += rps[idx];
 
   // calculate RPM from the RPS moving average
-  average *= 60;
   average /= RPM_AVG;
+  average *= 60;
   average /= MAGS;
 
   // reset mag_count for the next pass
