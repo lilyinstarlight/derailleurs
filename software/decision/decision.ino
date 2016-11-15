@@ -10,6 +10,8 @@
 
 #define GEAR_COUNT 8
 
+#define MIN_SHIFT 20
+
 // global variable declarations
 unsigned long oldtime;
 double average;
@@ -69,10 +71,14 @@ void loop() {
 
     calc_average();
 
-    int offset = target - average;
+    int offset;
+    if (average >= MIN_SHIFT)
+      offset = target - average;
+    else
+      offset = 0;
 
     // pedaling is getting hard shift down to make it easier
-    if(offset <= SHIFT_OFFSET)
+    if(offset <= -SHIFT_OFFSET)
       shift_down();
 
     // pedaling is getting easy shift up to make it easier
