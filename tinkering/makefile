@@ -130,7 +130,7 @@ ENERGIASBOOK := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # default arduino software directory, check software exists
 ifndef ENERGIADIR
-ENERGIADIR := $(firstword $(wildcard /opt/energia /opt/energia-bin /usr/share/energia))
+ENERGIADIR := $(firstword $(wildcard /opt/energia /opt/energia-bin /usr/share/energia /Applications/Energia.app/Contents/Java))
 endif
 ifeq "$(wildcard $(ENERGIADIR)/hardware/energia/msp430/boards.txt)" ""
 $(error ENERGIADIR is not set correctly; energia software not found)
@@ -349,7 +349,7 @@ debug:
 
 
 $(TARGET).elf: $(ENERGIALIB) $(OBJECTS)
-	$(CC) $(LINKFLAGS) $(OBJECTS) $(ENERGIALIB) -o $@
+	$(CC) $(OBJECTS) $(LINKFLAGS) $(ENERGIALIB) -o $@
 
 %.o: %.c
 	mkdir -p .dep/$(dir $<)
