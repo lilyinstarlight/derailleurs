@@ -1,3 +1,6 @@
 [submodule "cc1101"]
 	path = libraries/cc1101
 	url = anonymous@buffet.cs.clemson.edu:jhester/cc1101-energia
+[submodule "tinkering/libraries/ADXL362"]
+	path = tinkering/libraries/ADXL362
+	url = https://github.com/annem/ADXL362.git
