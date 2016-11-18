@@ -25,8 +25,8 @@ shift_t shift_data;
 gear_t gear_data;
 
 // set variables
-bool up;
-bool down;
+bool up = false;
+bool down = false;
 
 // initalize gear count
 int gear = 8;
@@ -66,22 +66,33 @@ void setup() {
 void loop() {
   // receive potential radio data
   if (Radio.CheckReceiveFlag()) {
+    // get general radio data
     Radio.ReceiveData((byte *)&radio_data);
 
+    // ensure this node is the intended recipient
     if (radio_data.header == SWITCHER_HEADER) {
+      // decode data into structure
       shift_data = radio_data.shift;
 
+      // shift according to structure
       up = shift_data.up;
+      if (up)
+        Serial.println("Shift Up");
       down = shift_data.down;
+      if (down)
+        Serial.println("Shift Down");
     }
     else {
+      // no radio data for us
       up = false;
       down = false;
     }
 
+    // wait for next radio packet
     Radio.RxOn();
   }
   else {
+    // no radio data for us
     up = false;
     down = false;
   }
@@ -131,22 +142,26 @@ void disable() {
 }
 
 void shift_up() {
-  gearStepper.step(-shift);
-  Serial.print("Shifted ");
-  Serial.println(-shift);
-}
-
-void shift_down() {
   gearStepper.step(shift);
   Serial.print("Shifted ");
   Serial.println(shift);
 }
 
+void shift_down() {
+  gearStepper.step(-shift);
+  Serial.print("Shifted ");
+  Serial.println(-shift);
+}
+
 void send_gear() {
+  // prepare a gear structure
   gear_data.gear = gear;
+
+  //stuff structure into a radio packet
   radio_data.header = SWITCHER_HEADER;
   radio_data.gear = gear_data;
 
+  // send data and put radio back in receiving mode
   Radio.SendData((byte *)&radio_data, sizeof(radio_data));
   Radio.RxOn();
 }

@@ -77,13 +77,13 @@ void loop() {
     else
       offset = 0;
 
-    // pedaling is getting hard shift down to make it easier
+    // pedaling is getting easy shift up to make it harder
     if(offset <= -SHIFT_OFFSET)
-      shift_down();
-
-    // pedaling is getting easy shift up to make it easier
-    if(offset >= SHIFT_OFFSET)
       shift_up();
+
+    // pedaling is getting hard shift down to make it easier
+    if(offset >= SHIFT_OFFSET)
+      shift_down();
 
     // send interface data
     send_interface();
@@ -101,21 +101,27 @@ void loop() {
 
   // check for waiting radio messages
   if (Radio.CheckReceiveFlag()) {
+    // receive general radio data
     Radio.ReceiveData((byte *)&radio_data);
 
+    // check sender of radio data
     if (radio_data.header == SWITCHER_HEADER) {
+      // decode into gear data and account for inconsistency in system gear numbering
       gear_data = radio_data.gear;
       gear = GEAR_COUNT - gear_data.gear;
     }
     else if (radio_data.header == INTERFACE_HEADER) {
+      // decode into target data
       target_data = radio_data.target;
 
+      // send necessary data down to switcher
       if (target_data.up)
         shift_up();
 
       if (target_data.down)
         shift_down();
 
+      // set or clear target cadence
       if (target_data.set) {
         if (target > 0)
           target = average;
@@ -124,6 +130,7 @@ void loop() {
       }
     }
 
+    // prepare for next radio packet
     Radio.RxOn();
   }
 }
@@ -152,11 +159,15 @@ void calc_average() {
 }
 
 void shift_up() {
+  // prepare shift structure
   shift_data.up = false;
   shift_data.down = true;
+
+  // put it into a radio packet
   radio_data.header = SWITCHER_HEADER;
   radio_data.shift = shift_data;
 
+  // send packet and put radio back in receive mode
   Radio.SendData((byte *)&radio_data, sizeof(radio_data));
   Radio.RxOn();
 
@@ -164,11 +175,15 @@ void shift_up() {
 }
 
 void shift_down() {
+  // prepare shift structure
   shift_data.up = true;
   shift_data.down = false;
+
+  // put it into a radio packet
   radio_data.header = SWITCHER_HEADER;
   radio_data.shift = shift_data;
 
+  // send packet and put radio back in receive mode
   Radio.SendData((byte *)&radio_data, sizeof(radio_data));
   Radio.RxOn();
 
@@ -176,11 +191,15 @@ void shift_down() {
 }
 
 void send_interface() {
+  // prepare interface structure
   interface_data.cadence = average;
   interface_data.gear = gear;
-  radio_data.header = SWITCHER_HEADER;
+
+  // put it into a radio packet
+  radio_data.header = INTERFACE_HEADER;
   radio_data.interface = interface_data;
 
+  // send packet and put radio back in receive mode
   Radio.SendData((byte *)&radio_data, sizeof(radio_data));
   Radio.RxOn();
 }
